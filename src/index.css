@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #faf9f5;
+  --color-card: #ffffff;
+  --color-accent: #ffb703;
+  --color-accent-glow: rgba(26, 26, 26, 0.15);
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5a5a5a;
+  --color-glass: #ffffff;
+  --color-glass-border: #1a1a1a;
+  
+  --font-sans: "Comic Neue", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Patrick Hand", "Space Grotesk", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: #faf9f5;
+    background-image: radial-gradient(#d3d0c9 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    color: #1a1a1a;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    padding-bottom: 80px;
+    @apply antialiased selection:bg-accent selection:text-black;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    color: #1a1a1a !important;
+    @apply tracking-tight;
+  }
+
+  /* Form inputs in comic style */
+  input[type="text"], 
+  input[type="email"], 
+  input[type="number"], 
+  select, 
+  textarea {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    border: 2.5px solid #1a1a1a !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    box-shadow: 2px 2px 0px #1a1a1a !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 600 !important;
+    outline: none !important;
+    transition: all 0.15s ease !important;
+  }
+
+  input:focus, 
+  select:focus, 
+  textarea:focus {
+    transform: translate(-1px, -1px) !important;
+    box-shadow: 4px 4px 0px #1a1a1a !important;
+    border-color: #1a1a1a !important;
+  }
+
+  /* Disable default styling on range */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #e2e2e0 !important;
+    height: 10px !important;
+    border: 2px solid #1a1a1a !important;
+    border-radius: 999px !important;
+    box-shadow: 1px 1px 0px #1a1a1a !important;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffb703;
+    border: 2px solid #1a1a1a;
+    cursor: pointer;
+    box-shadow: 1.5px 1.5px 0px #1a1a1a;
+    transition: transform 0.1s ease;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+}
+
+@layer components {
+  /* Neobrutalist Cards */
+  .glass-card, .glass-panel {
+    background-color: #ffffff !important;
+    border: 2.5px solid #1a1a1a !important;
+    border-radius: 16px !important;
+    box-shadow: 4px 4px 0px #1a1a1a !important;
+    color: #1a1a1a !important;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glass-card:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 6px 6px 0px #1a1a1a !important;
+  }
+
+  .glow-card {
+    background-color: #ffffff !important;
+    border: 2.5px solid #1a1a1a !important;
+    border-radius: 16px !important;
+    box-shadow: 4px 4px 0px #1a1a1a !important;
+    color: #1a1a1a !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .glow-card:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 6px 6px 0px #1a1a1a !important;
+  }
+
+  /* Comic Buttons */
+  .gold-btn {
+    background-color: #ffb703 !important;
+    color: #1a1a1a !important;
+    font-weight: 700 !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    border: 2.5px solid #1a1a1a !important;
+    box-shadow: 4px 4px 0px #1a1a1a !important;
+    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: var(--font-sans) !important;
+  }
+
+  .gold-btn:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 6px 6px 0px #1a1a1a !important;
+  }
+
+  .gold-btn:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 1px 1px 0px #1a1a1a !important;
+  }
+
+  /* Comic Nav-Bar */
+  .nav-blur {
+    background-color: #ffffff !important;
+    border: 2.5px solid #1a1a1a !important;
+    box-shadow: 4px 4px 0px #1a1a1a !important;
+    border-radius: 16px !important;
+  }
+
+  .nav-item-active {
+    color: #1a1a1a !important;
+    background-color: #8ecee6 !important; /* Pastel teal active indicator */
+    border: 2.5px solid #1a1a1a !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 0px #1a1a1a !important;
+    transform: translate(-1px, -1px);
+  }
+
+  .metric-label {
+    @apply text-[11px] uppercase tracking-[0.15em] text-text-secondary font-bold;
+    font-family: var(--font-sans) !important;
+  }
+
+  .metric-value {
+    @apply text-2xl font-bold;
+    font-family: var(--font-display) !important;
+    color: #1a1a1a !important;
+  }
+
+  .gold-gradient {
+    background-color: #ffb703 !important;
+    background-image: none !important;
+    border: 2px solid #1a1a1a !important;
+    box-shadow: 2px 2px 0px #1a1a1a !important;
+  }
+}
+
+/* Comic Badges & Step Numbers */
+.comic-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 2.5px solid #1a1a1a;
+  font-family: var(--font-display) !important;
+  font-weight: bold;
+  font-size: 1.3rem;
+  box-shadow: 2.5px 2.5px 0px #1a1a1a;
+  flex-shrink: 0;
+}
+
+.badge-teal { background-color: #a2eae6 !important; }
+.badge-pink { background-color: #ffd3d6 !important; }
+.badge-yellow { background-color: #fff0a2 !important; }
+.badge-purple { background-color: #e1d5f5 !important; }
+.badge-orange { background-color: #ffb085 !important; }
+.badge-green { background-color: #c9f2c9 !important; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #faf9f5;
+  border-left: 2px solid #1a1a1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffb703;
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e6a400;
+}
