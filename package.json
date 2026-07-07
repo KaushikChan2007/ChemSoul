@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "An interactive chemistry learning app for engineering students built with React and Vite.",
   "type": "module",
+  "homepage": "https://kaushikchan2007.github.io/ChemSoul",
   "scripts": {
     "dev": "vite",
     "backend": "tsx server.ts",
@@ -11,6 +12,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
+    "deploy": "gh-pages -d dist",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,6 +36,7 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "gh-pages": "^5.0.0"
   }
 }
