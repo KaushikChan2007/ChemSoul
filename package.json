@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "deploy": "gh-pages -d dist",
+    "postbuild": "node scripts/copy-404.mjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
