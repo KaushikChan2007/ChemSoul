@@ -62,42 +62,18 @@ export default function App() {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [modulesRes, labsRes] = await Promise.all([
-          fetch('/api/modules'),
-          fetch('/api/labs')
-        ]);
-        if (!modulesRes.ok || !labsRes.ok) throw new Error('API unavailable');
-        const modulesData = await modulesRes.json();
-        const labsData = await labsRes.json();
-        setModules(modulesData);
-        setLabs(labsData);
-      } catch {
-        // Fallback to locally bundled data — app works without the backend
-        console.info('Backend unreachable — using local data fallback.');
-        setModules(LOCAL_MODULES as Module[]);
-        setLabs(LOCAL_LABS as LabExperiment[]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    setModules(LOCAL_MODULES as Module[]);
+    setLabs(LOCAL_LABS as LabExperiment[]);
+    setLoading(false);
   }, []);
 
-  // Persist progress to localStorage and (best-effort) to the backend
+  // Persist progress to localStorage only; the app is frontend-only.
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
     localStorage.setItem('chemsoul_progress', JSON.stringify(progress));
-    // Sync to server (fire-and-forget — failure is fine, localStorage is the source of truth)
-    fetch('/api/user/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(progress),
-    }).catch(() => { /* Server offline — progress is safe in localStorage */ });
   }, [progress]);
 
   const updateProfile = () => {
@@ -115,6 +91,56 @@ export default function App() {
       return Math.min(95, Math.round((score / Math.max(1, module.quiz.length)) * 100));
     }
     return 0;
+  };
+
+  const downloadTextFile = (filename: string, content: string) => {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadModuleNotes = (module: Module) => {
+    const content = [
+      `CHEMSOUL MODULE NOTES: ${module.title}`,
+      '',
+      `Description: ${module.description}`,
+      '',
+      'Topics:',
+      ...module.topics.map((topic) => `- ${topic}`),
+      '',
+      'Study Notes:',
+      ...module.notes.map((note, index) => `${index + 1}. ${note}`),
+      '',
+      'Prepared for offline study.'
+    ].join('\n');
+    downloadTextFile(`${module.id}-notes.txt`, content);
+  };
+
+  const downloadStudyPack = (module: Module) => {
+    const content = [
+      `CHEMSOUL STUDY PACK: ${module.title}`,
+      '',
+      `Description: ${module.description}`,
+      '',
+      'Concept Summary:',
+      module.explanation,
+      '',
+      'Key Topics:',
+      ...module.topics.map((topic) => `- ${topic}`),
+      '',
+      'Important Notes:',
+      ...module.notes.map((note, index) => `${index + 1}. ${note}`),
+      '',
+      'Test Questions:',
+      ...module.testPaper.map((q, index) => `${index + 1}. ${q.text}`)
+    ].join('\n');
+    downloadTextFile(`${module.id}-study-pack.txt`, content);
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -572,14 +598,12 @@ export default function App() {
                     <h2 className="text-2xl font-display font-bold text-black uppercase tracking-wider">Chapter Summary & Notes</h2>
                     <p className="text-text-secondary text-sm font-semibold">Comprehensive study material for {module.title}</p>
                   </div>
-                  <a 
-                    href={module.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button 
+                    onClick={() => downloadModuleNotes(module)}
                     className="gold-btn px-4 py-2.5 text-xs"
                   >
-                    <Download size={14} /> DOWNLOAD PDF
-                  </a>
+                    <Download size={14} /> DOWNLOAD NOTES
+                  </button>
                 </div>
                 <div className="space-y-4">
                   {module.notes?.map((note, i) => {
@@ -605,27 +629,23 @@ export default function App() {
                     <h2 className="text-2xl font-display font-bold text-black uppercase tracking-wider">Lecture Resources</h2>
                     <p className="text-text-secondary text-sm font-semibold">Visual slides and presentation materials for {module.title}</p>
                   </div>
-                  <a 
-                    href={module.pptUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button 
+                    onClick={() => downloadStudyPack(module)}
                     className="gold-btn px-4 py-2.5 text-xs"
                   >
-                    <Download size={14} /> DOWNLOAD PPTX
-                  </a>
+                    <Download size={14} /> DOWNLOAD PACK
+                  </button>
                 </div>
                 <div className="glass-card p-8 bg-white text-center border-dashed border-3 border-black shadow-none hover:translate-y-0">
                   <Layers size={48} className="mx-auto mb-4 text-[#ffb703]" />
                   <h3 className="text-xl font-bold text-black mb-2 font-display">Module Presentation Available</h3>
                   <p className="text-text-secondary text-sm font-semibold mb-4">Complete lecture slide deck covering all subtopics including chemical formulations, properties, and applications.</p>
-                  <a 
-                    href={module.pptUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button 
+                    onClick={() => downloadStudyPack(module)}
                     className="inline-flex gold-btn text-xs px-5 py-2.5"
                   >
-                    Get Slide Deck (PPTX)
-                  </a>
+                    Download Study Pack
+                  </button>
                 </div>
               </div>
             )}
